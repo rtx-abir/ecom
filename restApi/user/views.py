@@ -18,17 +18,17 @@ def generate_session_token(length = 10):
 @csrf_exempt
 def signin(request):
     if not request.method == 'POST':
-        return JsonResponse({'ERROR: Post Request only ( Email and Password)'})
+        return JsonResponse({'ERROR': 'Post Request only ( Email and Password)'})
     
     email = request.POST['email']
     password = request.POST['password']
 
 #email-password validation
     if not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", email):
-        return JsonResponse({'ERROR: Email-type is not valid'})
+        return JsonResponse({'ERROR': 'Email-type is not valid'})
     
     if len(password < 4):
-        return JsonResponse({'ERROR: password needs a minimum of 4 characters'})
+        return JsonResponse({'ERROR': 'password needs a minimum of 4 characters'})
 
     UserModel = get_user_model()
 
@@ -44,7 +44,7 @@ def signin(request):
             if user.session_token != '0':                               #default is 0, so if not 0 a token already exists        
                 user.session_token = '0'                                #setting it to 0 if not 0
                 user.save()
-                return JsonResponse({'ERROR: Session already exists'})
+                return JsonResponse({'ERROR': 'Session already exists'})
 
             token = generate_session_token()
             user.session_token = token                                  #giving the user a new session token
@@ -53,9 +53,9 @@ def signin(request):
             return JsonResponse({'token': token, 'user': user_dict})    #json shows token and user info except PW
         
         else:
-            return JsonResponse({'Error: invalid password'})            # pw validation failed
+            return JsonResponse({'Error': 'invalid password'})            # pw validation failed
     except UserModel.DoesNotExist:
-        return JsonResponse({'Error: invalid email'})                   # email validation failed
+        return JsonResponse({'Error': 'invalid email'})                   # email validation failed
 
 
 def signout(request, id):
@@ -70,9 +70,9 @@ def signout(request, id):
         logout(request)
 
     except UserModel.DoesNotExist:
-        return JsonResponse({'ERROR: invalid user ID'})
+        return JsonResponse({'ERROR': 'invalid user ID'})
 
-    return JsonResponse({'Logout success'})
+    return JsonResponse({'Success': 'Logout success'})
 
 
 class UserViewSet(viewsets.ModelViewSet):
