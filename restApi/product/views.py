@@ -5,7 +5,7 @@ from .models import product
 
 
 class ProductViewSet(viewsets.ModelViewSet):
-    queryset = product.objects.all().order_by('name')
+    queryset = product.objects.all().order_by('id')
     serializer_class = ProductSerializer
 
 # Create your views here.
