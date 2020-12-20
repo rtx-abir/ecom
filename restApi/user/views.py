@@ -1,9 +1,9 @@
 from rest_framework import viewsets
 from rest_framework.permissions import AllowAny
 from .serializers import UserSerializer
+from .models import CustomerUser
 from django.http import JsonResponse
 from django.contrib.auth import get_user_model
-from .models import CustomerUser
 from django.views.decorators.csrf import csrf_exempt
 from django.contrib.auth import login, logout
 
@@ -68,21 +68,8 @@ def signout(request, id):
         user.session_token = '0'                                         # setting session token to 0 on logout
         user.save()
         logout(request)
-
+        
     except UserModel.DoesNotExist:
         return JsonResponse({'ERROR: invalid user ID'})
 
     return JsonResponse({'Logout success'})
-
-
-class UserViewSet(viewsets.ModelViewSet):
-    permission_classes_by_action = {'create':[AllowAny]}
-
-    queryset = CustomerUser.objects.all().order_by('id')
-    serializer_class = UserSerializer
-
-    def get_permissions(self):
-        try:
-            return [permission() for permission in self.permission_classes_by_action[self.action]]
-        except KeyError:
-            return [permission() for permission in self.permission_classes]
