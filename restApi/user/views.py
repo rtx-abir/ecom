@@ -27,7 +27,7 @@ def signin(request):
     if not re.match(r"^[A-Za-z0-9\.\+_-]+@[A-Za-z0-9\._-]+\.[a-zA-Z]*$", email):
         return JsonResponse({'ERROR': 'Email-type is not valid'})
     
-    if len(password < 4):
+    if len(password) < 4:
         return JsonResponse({'ERROR': 'password needs a minimum of 4 characters'})
 
     UserModel = get_user_model()
